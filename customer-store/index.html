@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="author" content="Bharat Infotechs">
+  <meta name="description" content="TOOLNEX — next-generation shopping for professional tools, equipment and industrial essentials.">
+  <meta name="theme-color" content="#07070a">
+  <title>TOOLNEX — Tools. Technology. Tomorrow.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <canvas id="shaderBg" aria-hidden="true"></canvas>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="topbar">
+    <span>01 / PROFESSIONAL GEAR</span>
+    <span>SECURE CHECKOUT</span>
+    <span>FAST DISPATCH · GHAZIABAD</span>
+  </div>
+
+  <header class="header">
+    <button class="mobile-menu" onclick="openMenu()" aria-label="Open menu">☰</button>
+    <a class="brand" href="#home" onclick="goHome()" aria-label="TOOLNEX home">
+      <span class="brandmark"><span>TN</span></span>
+      <span class="brand-copy"><b>TOOLNEX</b><small>TOOLS · TECHNOLOGY · TOMORROW</small></span>
+    </a>
+
+    <div class="search">
+      <span class="search-symbol">⌕</span>
+      <input id="searchInput" placeholder="Search tools, brands, categories..." autocomplete="off" oninput="liveSearch()" onfocus="liveSearch()" onkeydown="if(event.key==='Enter'){hideSuggestions();doSearch()}if(event.key==='Escape')hideSuggestions()">
+      <button onclick="doSearch()">Search <span>↗</span></button>
+      <div id="searchSuggest" class="search-suggest"></div>
+    </div>
+
+    <div class="head-actions">
+      <button class="head-icon notification-head" onclick="openNotifications()" aria-label="Notifications"><span>◌</span><b>Alerts</b><i id="notifDot"></i></button>
+      <button class="accountbtn" onclick="openAccount()"><span class="avatar">◉</span><span id="accountText">Account</span></button>
+      <button class="cartbtn" onclick="openCart()"><span>Cart</span><span id="cartCount">0</span></button>
+      <a class="wa" href="https://wa.me/919810638157?text=Hello%20TOOLNEX,%20I%20need%20help." target="_blank" rel="noreferrer">WhatsApp ↗</a>
+    </div>
+  </header>
+
+  <nav class="catnav" id="catNav"></nav>
+  <div id="policyBar" class="policybar">
+    <button onclick="showPolicy('shipping')">Shipping</button>
+    <button onclick="showPolicy('returns')">Returns</button>
+    <button onclick="showPolicy('refunds')">Refunds</button>
+    <button onclick="showPolicy('cancellation')">Cancellation</button>
+    <button onclick="showPolicy('privacy')">Privacy</button>
+  </div>
+
+  <main id="app" onclick="hideSuggestions()"></main>
+
+  <nav class="mobile-nav" aria-label="Primary navigation">
+    <button data-tab="home" class="active" onclick="mobileNav('home');goHome()"><span class="nav-svg home-i" aria-hidden="true"></span><small>Home</small></button>
+    <button data-tab="search" onclick="mobileNav('search');focusMobileSearch()"><span class="nav-svg search-i" aria-hidden="true"></span><small>Search</small></button>
+    <button data-tab="shop" class="nav-shop-center" onclick="mobileNav('shop');showCategories()"><span class="nav-svg shop-i" aria-hidden="true"></span><small>Shop</small></button>
+    <button data-tab="cart" onclick="mobileNav('cart');openCart()"><span class="nav-svg cart-i" aria-hidden="true"></span><small>Cart</small></button>
+    <button data-tab="account" onclick="mobileNav('account');openAccount()"><span class="nav-svg account-i" aria-hidden="true"></span><small>Profile</small></button>
+  </nav>
+
+  <div id="drawer" class="drawer"><div class="drawerhead"><div><span class="drawer-index">TOOLNEX / SPACE</span><h3 id="drawerTitle">Menu</h3></div><button onclick="closeDrawer()">×</button></div><div id="drawerBody"></div></div>
+  <div id="shade" class="shade" onclick="closeDrawer()"></div>
+  <div id="welcome" class="modal"><div class="welcome-card" id="welcomeCard"></div></div>
+
+  <div id="chatbot" class="chatbot">
+    <button class="chat-fab" onclick="toggleChat()"><span>✦</span><b>TOOLNEX AI</b></button>
+    <div class="chat-window">
+      <div class="chat-head"><div><b>TOOLNEX Assistant</b><small>Product & order intelligence</small></div><button onclick="toggleChat()">×</button></div>
+      <div id="chatMessages" class="chat-messages"><div class="chat-msg bot">Hi. I can help you find tools, understand payments, or track an order.</div></div>
+      <div class="chat-quick"><button onclick="chatAsk('Popular tools')">Popular tools</button><button onclick="chatAsk('Track order')">Track order</button><button onclick="chatAsk('Payment options')">Payment</button><button onclick="chatAsk('WhatsApp')">WhatsApp</button></div>
+      <form class="chat-input" onsubmit="sendChat(event)"><input id="chatInput" placeholder="Ask about a tool or order…"><button>→</button></form>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <footer>
+    <div class="footer-brand"><b>TOOLNEX</b><span>TOOLS · TECHNOLOGY · TOMORROW</span><p>Next-generation commerce for professional tools, equipment and industrial essentials.</p></div>
+    <div><b>Customer Care</b><p>WhatsApp: +91 9810638157<br>Mon–Sat · 10 AM – 7 PM</p></div>
+    <div><b>Powered by</b><p>Bharat Infotechs<br>Commerce software & digital experience</p></div>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
+  <script src="../shared/data.js"></script>
+  <script src="../integrations/hub.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
